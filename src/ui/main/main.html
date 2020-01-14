@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="id=edge">
+        <title>Document</title>
+
+        <link rel="stylesheet" href="../../../assets/css/main.css">
+        <link rel="stylesheet" href="https://cdn.metroui.org.ua/v4/css/metro-all.min.css">
+        <script src="https://cdn.metroui.org.ua/v4/js/metro.min.js"></script>
+        <script src="../../bussiness/data-provider.js"></script>
+        <script src="main.js"></script>
+    </head>
+    <body onload="page_OnLoad()">
+        <div class="row-container">
+            <div id="ribbonContainer" class="row-container">
+                <nav data-role="ribbonmenu" data-on-tab="ribbon_OnTabChange(arguments)">
+                    <ul class="tabs-holder">
+                        <li><a href="#notesSection">Notes</a></li>
+                        <li><a href="#tasksSection">Tasks</a></li>
+                    </ul>
+                
+                    <div class="content-holder">
+                        <div class="section" id="notesSection">
+                            <div class="group">
+                                <button class="ribbon-button" onclick="notesCreate_OnClick()">
+                                        <span class="icon">
+                                            <img src="../../../assets/img/appbar.section.expand.png">
+                                        </span>
+                                    <span class="caption">Add</span>
+                                </button>
+                                <button class="ribbon-button" onclick="notesDelete_OnClick()">
+                                    <span class="icon">
+                                        <img src="../../../assets/img/appbar.section.collapse.png">
+                                    </span>
+                                <span class="caption">Delete</span>
+                                </button>
+                                <button class="ribbon-button" onclick="notesUpdate_OnClick()">
+                                    <span class="icon">
+                                        <img src="../../../assets/img/appbar.disk.png">
+                                    </span>
+                                    <span class="caption">Save</span>
+                                </button>
+                                    <span class="title">Note</span>
+                            </div>
+                
+                            <div class="group">
+                                <button class="ribbon-button" onclick="notesRefresh_OnClick()">
+                                        <span class="icon">
+                                            <img src="../../../assets/img/appbar.refresh.clockwise.down.png">
+                                        </span>
+                                    <span class="caption">Refresh</span>
+                                </button>
+                
+                                <span class="title">Main</span>
+                            </div>
+                        </div>
+        
+                        <div class="section" id="tasksSection">
+                            <div class="group">
+                                <button class="ribbon-button" onclick="tasksCreate_OnClick()">
+                                        <span class="icon">
+                                            <img src="../../../assets/img/appbar.section.expand.png">
+                                        </span>
+                                    <span class="caption">Add</span>
+                                </button>
+                                <button class="ribbon-button" onclick="tasksDelete_OnClick()">
+                                    <span class="icon">
+                                        <img src="../../../assets/img/appbar.section.collapse.png">
+                                    </span>
+                                <span class="caption">Delete</span>
+                                </button>
+                                <button class="ribbon-button" onclick="tasksUpdate_OnClick()">
+                                    <span class="icon">
+                                        <img src="../../../assets/img/appbar.disk.png">
+                                    </span>
+                                    <span class="caption">Save</span>
+                                </button>
+                                    <span class="title">Task</span>
+                            </div>
+                
+                            <div class="group">
+                                <button class="ribbon-button" onclick="tasksRefresh_OnClick()">
+                                        <span class="icon">
+                                            <img src="../../../assets/img/appbar.refresh.clockwise.down.png">
+                                        </span>
+                                    <span class="caption">Refresh</span>
+                                </button>
+                
+                                <span class="title">Main</span>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div id="iframeContainer" class="second-row">
+                <div id="Notes" class="tabcontent" style="height:100%;width:100%">
+                    <iframe id="notesFrame" src="notes/notes.html" style="height:100%;width:100%"></iframe>
+                </div>
+                <div id="Tasks" class="tabcontent" style="height:100%;width:100%">
+                    <iframe id="tasksFrame" src="tasks/tasks.html" style="height:100%;width:100%"></iframe>
+                </div>
+            </div>    
+        </div>
+        
+    </body>
+</html>
