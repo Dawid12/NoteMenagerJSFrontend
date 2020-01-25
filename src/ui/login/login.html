@@ -7,17 +7,20 @@
         <title>Document</title>
 
         <link rel="stylesheet" href="../../../assets/css/login.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="login.js"></script>
         <script src="../../bussiness/data-provider.js"></script>
+        <script src="../../common/code/rest-helper.js"></script>
+        <script src="../../common/consts/consts.js"></script>
     </head>
     <body>
         <div class="logindiv">
               <div>
                 <label for="uname"><b>Username</b></label>
-                <input type="text" placeholder="Enter Username" name="uname" id="loginInput">
+                <input type="text" placeholder="Enter Username" name="uname" id="loginInput" value="admin">
             
                 <label for="psw"><b>Password</b></label>
-                <input type="password" placeholder="Enter Password" name="psw" id="passwordInput">
+                <input type="password" placeholder="Enter Password" name="psw" id="passwordInput" value="admin">
 
                 <button onclick="submitLogin_OnClick()">Login</button>
                 <button onclick="registerBtn_OnClick()" class="registerbtn">Register</button>

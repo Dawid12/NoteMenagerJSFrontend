@@ -7,34 +7,42 @@
         <title>Document</title>
 
         <link rel="stylesheet" href="https://cdn.metroui.org.ua/v4/css/metro-all.min.css">
+        <link rel="stylesheet" href="../../../../assets/css/notes.css">
+        <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
         <script src="https://cdn.metroui.org.ua/v4/js/metro.min.js"></script>
-        <script src="../../bussiness/data-provider.js"></script>
+        <script src="../../../common/consts/consts.js"></script>
+        <script src="../../../bussiness/data-provider.js"></script>
+        <script src="../../../common/code/rest-helper.js"></script>
         <script src="notes.js"></script>
+        
     </head>
-    <body>
-        Soon, here, amazing... notes!
-
-        <ul data-role="treeview">
-            <li data-icon="<span class='mif-star-full'></span>" data-caption="Favorites">
-                <ul>
-                    <li data-icon="<span class='mif-library'></span>" data-caption="Projects"></li>
-                    <li data-icon="<span class='mif-download'></span>" data-caption="Downloads"></li>
-                    <li data-icon="<img src='images/desktop.png'>" data-caption="Desktop"></li>
-                </ul>
-            </li>
-            <li data-icon="<span class='mif-onedrive'></span>" data-caption="OneDrive">
-                <ul>
-                    <li data-caption="Documents"></li>
-                    <li data-caption="Projects" data-collapsed="true">
-                        <ul>
-                            <li data-caption="Web"></li>
-                            <li data-caption="Android"></li>
-                            <li data-caption="Windows"></li>
-                            <li data-caption="iOS"></li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-        </ul>
+    <body onload="notes_OnLoad()" style="height:100%;width:100%">
+        <div data-role="splitter" class="h-100" data-split-sizes="20, 80">
+            <div class="d-flex flex-justify-left flex-align-left">
+                <div id="noteTreeDiv">
+                    <ul data-role="treeview" data-on-expand-node="onExpandNode" data-on-node-click="onNodeClick" data-on-node-insert="onNodeInsert" id="notesTreeView">
+                    </ul>
+                </div>
+            </div>
+            <div class="d-flex flex-justify-center flex-align-center">
+                <div id="parent">
+                    <div class="child">
+                        <input type="text" data-role="input" data-prepend="Note title: ">
+                    </div>
+                    <div class="child">
+                        <input type="text" data-role="input" data-prepend="Note master: ">
+                    </div>
+                    <div class="child">
+                        <textarea data-role="textarea"
+                            data-default-value="Enter your note's text here..."
+                            data-prepend="<span class='mif-leanpub'></span>"
+                            data-clear-button-icon="<span class='mif-cross fg-white'></span>">
+                        </textarea>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
     </body>
 </html>

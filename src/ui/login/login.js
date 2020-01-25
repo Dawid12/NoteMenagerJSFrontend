@@ -27,24 +27,33 @@ function cancelBtn_OnClick()
         modal.style.display = "none";
     }
 }
-function submitLogin_OnClick()
+async function submitLogin_OnClick()
 {
     var loginInput = document.getElementById('loginInput');
     var passwordInput = document.getElementById('passwordInput');
     if(loginInput != null && passwordInput != null)
     {
-        debugger;
-        var dataProvider = new DataProvider(loginInput.value, passwordInput.value);
-        if(dataProvider.login())
+        var dataProvider = new DataProvider(null, "http://localhost:27847/")
+        dataProvider.login(loginInput.value, passwordInput.value).then(function(result)
         {
-            let win = new BrowserWindow({width: "100%", height: "100%"})
-            win.dataProvider = dataProvider;
-            win.on('close', function() { win = null; })
-            win.loadFile('src/ui/main/main.html')
-            win.webContents.openDevTools()
-            win.removeMenu()
-            win.show()
-            window.close()
-        }
+            if(result != null && result.UserId != null && result.UserId != 0)
+            {
+                let win = new BrowserWindow({show: false})
+                win.maximize()
+                debugger;
+                localStorage['user'] = JSON.stringify(result);
+                localStorage['baseUrl'] = "http://localhost:27847/";
+                win.on('close', function() { win = null; })
+                win.loadFile('src/ui/main/main.html')
+                win.webContents.openDevTools()
+                win.removeMenu()
+                win.show()
+                window.close()
+            }
+            else
+            {
+                alert("Failed to login!");
+            }
+        });
     }
 }

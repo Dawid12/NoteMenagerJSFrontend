@@ -1,7 +1,3 @@
-function page_OnLoad()
-{
-    var dataProvider = window.dataProvider;
-}
 function ribbon_OnTabChange(arguments)
 {
     if(arguments != null && arguments[0] != null)
@@ -19,21 +15,35 @@ function ribbon_OnTabChange(arguments)
         }
     }
 }
+
 function notesCreate_OnClick()
 {
-    console.log("Creating note...")
+    let notesIframe = document.getElementById('notesFrame').contentWindow;
+    if(notesIframe != null)
+    {
+        notesIframe.addNote();
+    }
 }
 function notesDelete_OnClick()
 {
-    console.log("Deleting note...")
+    let notesIframe = document.getElementById('notesFrame').contentWindow;
+    if(notesIframe != null)
+    {
+        notesIframe.deleteNote();
+    }
 }
 function notesUpdate_OnClick()
 {
-    console.log("Update note...")
+    let notesIframe = document.getElementById('notesFrame').contentWindow;
+    if(notesIframe != null)
+    {
+        notesIframe.updateNote();
+    }
 }
 function notesRefresh_OnClick()
 {
-    console.log("Refreshing notes...")
+    let notesIframe = document.getElementById('notesFrame');//.contentWindow;
+    notesIframe.src = notesIframe.src;
 }
 
 

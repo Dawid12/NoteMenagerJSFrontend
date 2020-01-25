@@ -1,16 +1,30 @@
 class DataProvider 
 {
-    constructor(login, password)
+    constructor(loggedUser, baseUrl)
     {
-        this.userLogin = login;
-        this.userPassword = password;
+        this.loggedUser = loggedUser;
+        this.baseUrl = baseUrl;
+        this.paths = new RestPaths();
     }
-    login()
+    async login(login, password)
     {
-        return true;
+        return RestHelper.post(this.baseUrl + this.paths.Login, {Login: login, Password: password})
     }
-    static register()
+    async getUserNotes()
     {
-        return true;
+        return RestHelper.post(this.baseUrl + this.paths.UserNotes, this.loggedUser);
+    }
+    async createNote(note)
+    {
+        note.UserId = this.loggedUser.UserId;
+        return RestHelper.post(this.baseUrl+this.paths.CreateNote, note);
+    }
+    async deleteNotes(notes)
+    {
+        return RestHelper.post(this.baseUrl+this.paths.DeleteNotes, notes);
+    }
+    async updateNote(note)
+    {
+        return RestHelper.post(this.baseUrl+this.paths.SaveNote, note)
     }
 }

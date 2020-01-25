@@ -8,19 +8,22 @@
 
         <link rel="stylesheet" href="../../../assets/css/main.css">
         <link rel="stylesheet" href="https://cdn.metroui.org.ua/v4/css/metro-all.min.css">
+        <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
         <script src="https://cdn.metroui.org.ua/v4/js/metro.min.js"></script>
+        <script src="../../common/consts/consts.js"></script>
         <script src="../../bussiness/data-provider.js"></script>
+        <script src="../../common/code/rest-helper.js"></script>
+        
         <script src="main.js"></script>
     </head>
-    <body onload="page_OnLoad()">
-        <div class="row-container">
+    <body>
+        <div class="row-container" style="height:100%;width:100%">
             <div id="ribbonContainer" class="row-container">
                 <nav data-role="ribbonmenu" data-on-tab="ribbon_OnTabChange(arguments)">
                     <ul class="tabs-holder">
                         <li><a href="#notesSection">Notes</a></li>
                         <li><a href="#tasksSection">Tasks</a></li>
                     </ul>
-                
                     <div class="content-holder">
                         <div class="section" id="notesSection">
                             <div class="group">
@@ -94,7 +97,8 @@
                     </div>
                 </nav>
             </div>
-            <div id="iframeContainer" class="second-row">
+
+            <div id="iframeContainer" class="second-row" style="height:100%;width:100%">
                 <div id="Notes" class="tabcontent" style="height:100%;width:100%">
                     <iframe id="notesFrame" src="notes/notes.html" style="height:100%;width:100%"></iframe>
                 </div>
