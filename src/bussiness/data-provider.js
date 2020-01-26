@@ -10,6 +10,10 @@ class DataProvider
     {
         return RestHelper.post(this.baseUrl + this.paths.Login, {Login: login, Password: password})
     }
+    async register()
+    {
+        return RestHelper.post(this.baseUrl + this.paths.Register, null)
+    }
     async getUserNotes()
     {
         return RestHelper.post(this.baseUrl + this.paths.UserNotes, this.loggedUser);

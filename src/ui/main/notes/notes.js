@@ -1,6 +1,19 @@
 var notes = null;
+var selectedMasterNote = null;
+var masterNotes = [];
+function onItemSelect(val, option, item)
+{
+    if(item != null && item.textContent != null)
+    {
+        selectedMasterNote = item.textContent
+    }
+}
 function notes_OnLoad()
 {
+    let creationDateInput = $('#creationDateInput').data('input');
+    let editionDateInput = $('#editionDateInput').data('input');
+    creationDateInput.disable();
+    editionDateInput.disable();
     if(localStorage['user'] != null && localStorage["baseUrl"] != null)
     {
         window.dataProvider = new DataProvider(JSON.parse(localStorage['user']), localStorage["baseUrl"])
@@ -13,13 +26,31 @@ function refresh()
     {
         notes = result;
         var toDisplay = notes.filter(function(note){return note.MasterNoteId == null;})
-        for(var i = 0; i < toDisplay.length; i++)
+        
+        for(let i = 0; i < toDisplay.length; i++)
         {
             $('#notesTreeView').data('treeview').addTo(null, {
                 caption: "["+toDisplay[i].NoteId.toString()+"]"+toDisplay[i].Title
             });
         }
+        fillMasterSelect();
     });
+}
+function fillMasterSelect()
+{
+    let masterNoteSelect = $('#masterNoteSelect').data('select');
+    if(masterNoteSelect != null && notes != null)
+    {
+        let displayTitles = []
+        for(let i = 0; i < notes.length; i++)
+        {
+            displayTitles.push("["+notes[i].NoteId.toString()+"]"+notes[i].Title);
+            masterNotes.push({id: notes[i].NoteId, index: i, title: "["+notes[i].NoteId.toString()+"]"+notes[i].Title})
+        }
+        masterNotes.push({id: null, title: "[none]none", index: masterNotes.length});
+        displayTitles.push("[none]none");
+        masterNoteSelect.data(displayTitles)
+    }
 }
 function onNodeInsert(node, tree)
 {
@@ -61,6 +92,54 @@ function getNoteId(treeNode)
 }
 function onNodeClick(node, tree)
 {
+    let noteId = getNoteId(node)
+    if(noteId != null && notes != null)
+    {
+        for(let i = 0; i < notes.length; i++)
+        {
+            if(notes[i].NoteId == noteId)
+            {
+                let noteTitleInput = $('#noteTitleInput').data('input');
+                if(noteTitleInput != null)
+                {
+                    noteTitleInput.elem.value = notes[i].Title;
+                }
+                let creationDateInput = $('#creationDateInput').data('input');
+                if(creationDateInput != null)
+                {
+                    creationDateInput.elem.value = new Date(parseInt(notes[i].CreationDate));
+                }
+                let editionDateInput = $('#editionDateInput').data('input');
+                if(editionDateInput != null)
+                {
+                    editionDateInput.elem.value = new Date(parseInt(notes[i].EditionDate));
+                }
+                let masterNoteSelect = $('#masterNoteSelect').data('select');
+                if(masterNoteSelect != null)
+                {
+                    let masterNote = masterNotes.filter(function(note)
+                    {
+                        return note.id == notes[i].MasterNoteId;
+                    });
+                    if(masterNote != null && masterNote.length > 0)
+                    {
+                        masterNoteSelect.val(masterNote[0].index);
+                    }
+                    else
+                    {
+                        debugger;
+                        masterNoteSelect.val(masterNotes[masterNotes.length - 1].index);
+                    }
+                }
+                let noteTextInput = $('#noteTextInput').data('textarea');
+                if(noteTextInput != null)
+                {
+                    noteTextInput.elem.value = notes[i].NoteText;
+                }
+                break;
+            }
+        }
+    }
 }
 function onExpandNode(node, tree)	
 {
@@ -132,7 +211,11 @@ function updateNote()
             let updatedNote = updateNoteObject(noteId);
             window.dataProvider.updateNote(updatedNote).then(function(result) 
             {
-               debugger; 
+               if(result != null && result == true)
+               {
+                   alert("Successfully saved!");
+                   document.location.href = document.location.href;
+               }
             });
             currentNode[0].innerText = "["+updatedNote.NoteId.toString()+"]"+updatedNote.Title;
         }
@@ -146,8 +229,40 @@ function updateNoteObject(noteId)
         {
             if(notes[i].NoteId == noteId)
             {
-                notes[i].Title = "updated Note"
-                notes[i].NoteText = "updated note text"
+                debugger
+                let noteTitleInput = $('#noteTitleInput').data('input');
+                if(noteTitleInput != null)
+                {
+                    notes[i].Title = noteTitleInput.elem.value;
+                }
+                let editionDateInput = $('#editionDateInput').data('input');
+                if(editionDateInput != null)
+                {
+                    notes[i].EditionDate = Date.now().toString();
+                }
+                let masterNoteSelect = $('#masterNoteSelect').data('select');
+                if(masterNoteSelect != null)
+                {
+                    if(selectedMasterNote != null)
+                    {
+                        let masterNote = masterNotes.filter(function(note)
+                        {
+                            return note.title == selectedMasterNote;
+                        });
+                        if(masterNote != null && masterNote.length > 0)
+                        {
+                            if(notes[i].noteId != masterNote[0].id)
+                            {
+                                notes[i].MasterNoteId = masterNote[0].id;
+                            }
+                        }
+                    }
+                }
+                let noteTextInput = $('#noteTextInput').data('textarea');
+                if(noteTextInput != null)
+                {
+                    notes[i].NoteText = noteTextInput.elem.value;
+                }
                 return notes[i]
             }
         }

@@ -49,17 +49,30 @@ function notesRefresh_OnClick()
 
 function tasksCreate_OnClick()
 {
-    console.log("Creating task...")
+    let tasksIframe = document.getElementById('tasksFrame').contentWindow;
+    if(tasksIframe != null)
+    {
+        tasksIframe.addTask();
+    }
 }
 function tasksDelete_OnClick()
 {
-    console.log("Deleting task...")
+    let tasksIframe = document.getElementById('tasksFrame').contentWindow;
+    if(tasksIframe != null)
+    {
+        tasksIframe.deleteTask();
+    }
 }
 function tasksUpdate_OnClick()
 {
-    console.log("Update task...")
+    let tasksIframe = document.getElementById('tasksFrame').contentWindow;
+    if(tasksIframe != null)
+    {
+        tasksIframe.updateTask();
+    }
 }
 function tasksRefresh_OnClick()
 {
-    console.log("Refreshing tasks...")
+    let tasksIframe = document.getElementById('tasksFrame');
+    tasksIframe.src = tasksIframe.src;
 }

@@ -24,16 +24,24 @@
                     </ul>
                 </div>
             </div>
-            <div class="d-flex flex-justify-center flex-align-center">
+            
+            <div class="d-flex flex-justify-center">
                 <div id="parent">
                     <div class="child">
-                        <input type="text" data-role="input" data-prepend="Note title: ">
+                        <input id="noteTitleInput" type="text" data-role="input" data-prepend="Note title: ">
                     </div>
                     <div class="child">
-                        <input type="text" data-role="input" data-prepend="Note master: ">
+                        <input id="creationDateInput" type="text" data-role="input" data-prepend="Creation Date: ">
                     </div>
                     <div class="child">
-                        <textarea data-role="textarea"
+                        <input id="editionDateInput" type="text" data-role="input" data-prepend="Edition Date: ">
+                    </div>
+                    <div class="child">
+                        <select id="masterNoteSelect" data-role="select" data-prepend="Master Note" data-on-item-select="onItemSelect">
+                        </select>
+                    </div>
+                    <div class="child">
+                        <textarea id="noteTextInput" data-role="textarea"
                             data-default-value="Enter your note's text here..."
                             data-prepend="<span class='mif-leanpub'></span>"
                             data-clear-button-icon="<span class='mif-cross fg-white'></span>">
