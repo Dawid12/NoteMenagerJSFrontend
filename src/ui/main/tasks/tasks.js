@@ -2,6 +2,8 @@ var tasks = null;
 var selectedMasterTask = null;
 var selectedTaskStatus = null;
 var masterTasks = [];
+var taskStatuses = [];
+var shouldRefresh = false;
 function onItemSelect(val, option, item)
 {
     if(item != null && item.textContent != null)
@@ -15,6 +17,28 @@ function onStatusSelect(val, option, item)
     {
         selectedTaskStatus = item.textContent
     }
+}
+function getStatusText(statusId)
+{
+    if(taskStatuses != null && taskStatuses.length > 0)
+    {
+        for(let i = 0; i < taskStatuses.length; i++)
+        {
+            if(taskStatuses[i].id == statusId)
+            {
+                return taskStatuses[i].title;
+            }
+        }
+    }
+    return "unknown";
+}
+function getDisplayTask(task)
+{
+    if(task != null)
+    {
+        return "["+task.TaskId.toString()+"]" + task.Title + " - " + getStatusText(task.TaskStatus);
+    }
+    return "none";
 }
 function tasks_OnLoad()
 {
@@ -30,23 +54,22 @@ function tasks_OnLoad()
 }
 function refresh()
 {
-    window.dataProvider.getUserTasks().then(function(result)
-    {
-        tasks = result;
-        var toDisplay = tasks.filter(function(task){return task.MasterTaskId == null;})
-        
-        for(let i = 0; i < toDisplay.length; i++)
-        {
-            $('#tasksTreeView').data('treeview').addTo(null, {
-                caption: "["+toDisplay[i].TaskId.toString()+"]"+toDisplay[i].Title
-            });
-        }
-        fillMasterSelect();
-    });
     window.dataProvider.getTaskStatuses().then(function(result)
     {
-        debugger;
-
+        fillStatusSelect(result);
+        window.dataProvider.getUserTasks().then(function(result)
+        {
+            tasks = result;
+            var toDisplay = tasks.filter(function(task){return task.MasterTaskId == null;})
+            
+            for(let i = 0; i < toDisplay.length; i++)
+            {
+                $('#tasksTreeView').data('treeview').addTo(null, {
+                    caption: getDisplayTask(toDisplay[i])
+                });
+            }
+            fillMasterSelect();
+        });
     });
 }
 function fillMasterSelect()
@@ -57,8 +80,9 @@ function fillMasterSelect()
         let displayTitles = []
         for(let i = 0; i < tasks.length; i++)
         {
-            displayTitles.push("["+tasks[i].NoteId.toString()+"]"+tasks[i].Title);
-            masterTasks.push({id: tasks[i].NoteId, index: i, title: "["+tasks[i].NoteId.toString()+"]"+tasks[i].Title})
+            let title = getDisplayTask(tasks[i])
+            displayTitles.push(title);
+            masterTasks.push({id: tasks[i].TaskId, index: i, title: title})
         }
         masterTasks.push({id: null, title: "[none]none", index: masterTasks.length});
         displayTitles.push("[none]none");
@@ -68,9 +92,15 @@ function fillMasterSelect()
 function fillStatusSelect(statuses)
 {
     let taskStatusSelect = $('#taskStatusSelect').data('select');
-    if(taskStatusSelect != null && tasks != null)
+    if(taskStatusSelect != null && statuses != null)
     {
         let displayTitles = [];
+        for(let i = 0; i < statuses.length; i++)
+        {
+            displayTitles.push(statuses[i].Name);
+            taskStatuses.push({id: statuses[i].StatusId, index: i, title: statuses[i].Name})
+        }
+        taskStatusSelect.data(displayTitles)
     }
 }
 function onNodeInsert(node, tree)
@@ -84,7 +114,7 @@ function onNodeInsert(node, tree)
             for(let i = 0; i < children.length; i++)
             {
                 $('#tasksTreeView').data('treeview').addTo(node, {
-                    caption: "["+children[i].TaskId.toString()+"]"+children[i].Title
+                    caption: getDisplayTask(children[i])
                 });
             }
         }
@@ -135,12 +165,12 @@ function onNodeClick(node, tree)
                 {
                     editionDateInput.elem.value = new Date(parseInt(tasks[i].EditionDate));
                 }
-                let masterTaskSelect = $('#masterNoteSelect').data('select');
+                let masterTaskSelect = $('#masterTaskSelect').data('select');
                 if(masterTaskSelect != null)
                 {
                     let masterTask = masterTasks.filter(function(task)
                     {
-                        return task.id == notes[i].MasterTaskId;
+                        return task.id == tasks[i].MasterTaskId;
                     });
                     if(masterTask != null && masterTask.length > 0)
                     {
@@ -148,8 +178,19 @@ function onNodeClick(node, tree)
                     }
                     else
                     {
-                        debugger;
                         masterTaskSelect.val(masterTasks[masterTasks.length - 1].index);
+                    }
+                }
+                let taskStatusSelect = $('#taskStatusSelect').data('select');
+                if(taskStatusSelect != null)
+                {
+                    let taskStatus = taskStatuses.filter(function(status)
+                    {
+                        return status.id == tasks[i].TaskStatus;
+                    });
+                    if(taskStatus != null && taskStatus.length > 0)
+                    {
+                        taskStatusSelect.val(taskStatus[0].index);
                     }
                 }
                 let taskTextInput = $('#taskTextInput').data('textarea');
@@ -183,22 +224,24 @@ function addTask()
     {
         task.MasterTaskId = null;
     }
-    window.dataProvider.createTask(task).then(function(result) {
+    window.dataProvider.createTask(task).then(function(result) 
+    {
         $('#tasksTreeView').data('treeview').addTo(parentNode, {
-            caption: "["+result.TaskId.toString()+"]"+result.Title
+            caption: "["+result.TaskId.toString()+"]"+result.Title  + " - " + getStatusText(result.TaskStatus)
         })
         tasks.push(result);
     });
 }
-function deleteNote()
+function deleteTask()
 {
+    debugger;
     let currentNode = $('#tasksTreeView').find('.current');
     if(currentNode != null && currentNode.length > 0)
     {
         let taskId = getTaskId(currentNode[0]);
         if(taskId != null)
         {
-            let selectedNode = notes.filter(function(task) {return task.TaskId == taskId});
+            let selectedNode = tasks.filter(function(task) {return task.TaskId == taskId});
             let childrenOfNode = getTaskStructure(taskId);
             Array.prototype.push.apply(childrenOfNode, selectedNode);
             window.dataProvider.deleteTasks(childrenOfNode).then(function(result)
@@ -220,25 +263,27 @@ function deleteNote()
         }
     }
 }
-function updateNote()
+function updateTask()
 {
-    debugger;
     let currentNode = $('#tasksTreeView').find('.current');
     if(currentNode != null && currentNode.length > 0)
     {
         let taskId = getTaskId(currentNode[0]);
         if(taskId != null)
         {
-            let updatedTask = updateTaskeObject(taskId);
-            window.dataProvider.updateNote(updatedTask).then(function(result) 
+            let updatedTask = updateTaskObject(taskId);
+            window.dataProvider.updateTask(updatedTask).then(function(result) 
             {
                if(result != null && result == true)
                {
                    alert("Successfully saved!");
-                   document.location.href = document.location.href;
+                   if(shouldRefresh)
+                   {
+                        document.location.href = document.location.href;
+                   }
                }
             });
-            currentNode[0].innerText = "["+updatedTask.TaskId.toString()+"]"+updatedTask.Title;
+            currentNode[0].innerText = getDisplayTask(updatedTask);
         }
     }
 }
@@ -250,7 +295,6 @@ function updateTaskObject(taskId)
         {
             if(tasks[i].TaskId == taskId)
             {
-                debugger
                 let taskTitleInput = $('#taskTitleInput').data('input');
                 if(taskTitleInput != null)
                 {
@@ -259,7 +303,7 @@ function updateTaskObject(taskId)
                 let editionDateInput = $('#editionDateInput').data('input');
                 if(editionDateInput != null)
                 {
-                    notes[i].EditionDate = Date.now().toString();
+                    tasks[i].EditionDate = Date.now().toString();
                 }
                 let masterTaskSelect = $('#masterTaskSelect').data('select');
                 if(masterTaskSelect != null)
@@ -275,7 +319,24 @@ function updateTaskObject(taskId)
                             if(tasks[i].TaskId != masterTask[0].id)
                             {
                                 tasks[i].MasterTaskId = masterTask[0].id;
+                                shouldRefresh = true;
                             }
+                        }
+                    }
+                }
+                let taskStatusSelect = $('#taskStatusSelect').data('select');
+                if(taskStatusSelect != null)
+                {
+                    debugger;
+                    if(selectedTaskStatus != null)
+                    {
+                        let taskStatus = taskStatuses.filter(function(status)
+                        {
+                            return status.title == selectedTaskStatus;
+                        });
+                        if(taskStatus != null && taskStatus.length > 0)
+                        {
+                            tasks[i].TaskStatus = taskStatus[0].id;
                         }
                     }
                 }
@@ -289,7 +350,7 @@ function updateTaskObject(taskId)
         }
     }
 }
-function getTaskStructure(noteId)
+function getTaskStructure(taskId)
 {
     let children = tasks.filter(function(task) {return task.MasterTaskId == taskId});
     let childrenOfChildren = [];
@@ -297,7 +358,7 @@ function getTaskStructure(noteId)
     {
         for(let i = 0; i<children.length;i++)
         {
-            Array.prototype.push.apply(childrenOfChildren, getNoteStructure(children[i].TaskId));
+            Array.prototype.push.apply(childrenOfChildren, getTaskStructure(children[i].TaskId));
         }
         Array.prototype.push.apply(children, childrenOfChildren);
     }
@@ -308,12 +369,11 @@ function makeNewTask()
     return {
         TaskId: 0,
         UserId: null,
+        Title: "New task",
         TaskText: "empty",
-        Type: null,
-        MasterTaskId: null,
-        Title: "New note",
         CreationDate: Date.now().toString(),
         EditionDate: Date.now().toString(),
-        TaskStatus: 0
+        TaskStatus: 1,
+        MasterTaskId: null,
     };
 }

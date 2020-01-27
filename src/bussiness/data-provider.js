@@ -38,7 +38,7 @@ class DataProvider
     async createTask(task)
     {
         task.UserId = this.loggedUser.UserId;
-        return RestHelper.post(this.baseUrl+this.paths.createTask, task);
+        return RestHelper.post(this.baseUrl+this.paths.CreateTask, task);
     }
     async deleteTasks(tasks)
     {
