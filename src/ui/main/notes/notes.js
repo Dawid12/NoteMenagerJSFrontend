@@ -251,7 +251,7 @@ function updateNoteObject(noteId)
                         });
                         if(masterNote != null && masterNote.length > 0)
                         {
-                            if(notes[i].noteId != masterNote[0].id)
+                            if(notes[i].NoteId != masterNote[0].id)
                             {
                                 notes[i].MasterNoteId = masterNote[0].id;
                             }

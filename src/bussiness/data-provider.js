@@ -8,11 +8,11 @@ class DataProvider
     }
     async login(login, password)
     {
-        return RestHelper.post(this.baseUrl + this.paths.Login, {Login: login, Password: password})
+        return RestHelper.post(this.baseUrl + this.paths.Login, {Login: login, Password: password});
     }
     async register()
     {
-        return RestHelper.post(this.baseUrl + this.paths.Register, null)
+        return RestHelper.post(this.baseUrl + this.paths.Register, null);
     }
     async getUserNotes()
     {
@@ -25,10 +25,31 @@ class DataProvider
     }
     async deleteNotes(notes)
     {
-        return RestHelper.post(this.baseUrl+this.paths.DeleteNotes, notes);
+        return RestHelper.post(this.baseUrl + this.paths.DeleteNotes, notes);
     }
     async updateNote(note)
     {
-        return RestHelper.post(this.baseUrl+this.paths.SaveNote, note)
+        return RestHelper.post(this.baseUrl + this.paths.SaveNote, note);
+    }
+    async getUserTasks()
+    {
+        return RestHelper.post(this.baseUrl + this.paths.UserTasks, this.loggedUser);
+    }
+    async createTask(task)
+    {
+        task.UserId = this.loggedUser.UserId;
+        return RestHelper.post(this.baseUrl+this.paths.createTask, task);
+    }
+    async deleteTasks(tasks)
+    {
+        return RestHelper.post(this.baseUrl+ this.paths.DeleteTask, tasks);
+    }
+    async updateTask(task)
+    {
+        return RestHelper.post(this.baseUrl + this.paths.UpdateTask, task);
+    }
+    async getTaskStatuses()
+    {
+        return RestHelper.post(this.baseUrl + this.paths.GetTaskStatuses, null);
     }
 }

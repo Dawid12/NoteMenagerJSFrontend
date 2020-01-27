@@ -7,11 +7,53 @@
         <title>Document</title>
 
         <link rel="stylesheet" href="https://cdn.metroui.org.ua/v4/css/metro-all.min.css">
+        <link rel="stylesheet" href="../../../../assets/css/notes.css">
+        <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
         <script src="https://cdn.metroui.org.ua/v4/js/metro.min.js"></script>
-        <script src="../../bussiness/data-provider.js"></script>
+        <script src="../../../common/consts/consts.js"></script>
+        <script src="../../../bussiness/data-provider.js"></script>
+        <script src="../../../common/code/rest-helper.js"></script>
         <script src="tasks.js"></script>
     </head>
-    <body>
-        Soon, here, amazing... tasks!
+    <body onload="tasks_OnLoad()" style="height:100%;width:100%">
+        <div data-role="splitter" class="h-100" data-split-sizes="20, 80">
+            <div class="d-flex flex-justify-left flex-align-left">
+                <div id="taskTreeDiv">
+                    <ul data-role="treeview" data-on-expand-node="onExpandNode" data-on-node-click="onNodeClick" data-on-node-insert="onNodeInsert" id="tasksTreeView">
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="d-flex flex-justify-center">
+                <div id="parent">
+                    <div class="child">
+                        <input id="taskTitleInput" type="text" data-role="input" data-prepend="Task title: ">
+                    </div>
+                    <div class="child">
+                        <input id="creationDateInput" type="text" data-role="input" data-prepend="Creation Date: ">
+                    </div>
+                    <div class="child">
+                        <input id="editionDateInput" type="text" data-role="input" data-prepend="Edition Date: ">
+                    </div>
+                    <div class="child">
+                        <select id="masterTaskSelect" data-role="select" data-prepend="Master Task" data-on-item-select="onItemSelect">
+                        </select>
+                    </div>
+                    <div class="child">
+                        <select id="taskStatusSelect" data-role="select" data-prepend="Task Status" data-on-item-select="onStatusSelect">
+                        </select>
+                    </div>
+                    <div class="child">
+                        <textarea id="taskTextInput" data-role="textarea"
+                            data-default-value="Enter your task's text here..."
+                            data-prepend="<span class='mif-leanpub'></span>"
+                            data-clear-button-icon="<span class='mif-cross fg-white'></span>">
+                        </textarea>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
     </body>
 </html>
