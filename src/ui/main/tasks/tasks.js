@@ -234,7 +234,6 @@ function addTask()
 }
 function deleteTask()
 {
-    debugger;
     let currentNode = $('#tasksTreeView').find('.current');
     if(currentNode != null && currentNode.length > 0)
     {
@@ -327,7 +326,6 @@ function updateTaskObject(taskId)
                 let taskStatusSelect = $('#taskStatusSelect').data('select');
                 if(taskStatusSelect != null)
                 {
-                    debugger;
                     if(selectedTaskStatus != null)
                     {
                         let taskStatus = taskStatuses.filter(function(status)

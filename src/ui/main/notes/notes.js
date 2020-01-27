@@ -1,6 +1,7 @@
 var notes = null;
 var selectedMasterNote = null;
 var masterNotes = [];
+var shouldRefresh = false;
 function onItemSelect(val, option, item)
 {
     if(item != null && item.textContent != null)
@@ -127,7 +128,6 @@ function onNodeClick(node, tree)
                     }
                     else
                     {
-                        debugger;
                         masterNoteSelect.val(masterNotes[masterNotes.length - 1].index);
                     }
                 }
@@ -201,7 +201,6 @@ function deleteNote()
 }
 function updateNote()
 {
-    debugger;
     let currentNode = $('#notesTreeView').find('.current');
     if(currentNode != null && currentNode.length > 0)
     {
@@ -214,7 +213,10 @@ function updateNote()
                if(result != null && result == true)
                {
                    alert("Successfully saved!");
-                   document.location.href = document.location.href;
+                   if(shouldRefresh)
+                   {
+                        document.location.href = document.location.href;
+                   }
                }
             });
             currentNode[0].innerText = "["+updatedNote.NoteId.toString()+"]"+updatedNote.Title;
@@ -229,7 +231,6 @@ function updateNoteObject(noteId)
         {
             if(notes[i].NoteId == noteId)
             {
-                debugger
                 let noteTitleInput = $('#noteTitleInput').data('input');
                 if(noteTitleInput != null)
                 {
@@ -254,6 +255,7 @@ function updateNoteObject(noteId)
                             if(notes[i].NoteId != masterNote[0].id)
                             {
                                 notes[i].MasterNoteId = masterNote[0].id;
+                                shouldRefresh = true;
                             }
                         }
                     }

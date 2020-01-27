@@ -1,7 +1,10 @@
 const electron = require('electron')
 const path = require('path')
 const BrowserWindow = electron.remote.BrowserWindow
-
+function onLoad()
+{
+    localStorage['baseUrl'] = "http://localhost:27847/";
+}
 window.onclick = function(event) 
 {
     var modal = document.getElementById('registerDiv');
@@ -15,7 +18,7 @@ function registerBtn_OnClick()
     let win = new BrowserWindow({width: 400, height: 400})
     win.on('close', function() { win = null; })
     win.removeMenu()
-    win.webContents.openDevTools()
+    //win.webContents.openDevTools()
     win.loadFile('src/ui/register/register.html')
     win.show()
 }
@@ -33,7 +36,7 @@ async function submitLogin_OnClick()
     var passwordInput = document.getElementById('passwordInput');
     if(loginInput != null && passwordInput != null)
     {
-        var dataProvider = new DataProvider(null, "http://localhost:27847/")
+        var dataProvider = new DataProvider(null, localStorage['baseUrl'])
         dataProvider.login(loginInput.value, passwordInput.value).then(function(result)
         {
             if(result != null && result.UserId != null && result.UserId != 0)
@@ -42,10 +45,9 @@ async function submitLogin_OnClick()
                 win.maximize()
                 debugger;
                 localStorage['user'] = JSON.stringify(result);
-                localStorage['baseUrl'] = "http://localhost:27847/";
                 win.on('close', function() { win = null; })
                 win.loadFile('src/ui/main/main.html')
-                win.webContents.openDevTools()
+                //win.webContents.openDevTools()
                 win.removeMenu()
                 win.show()
                 window.close()

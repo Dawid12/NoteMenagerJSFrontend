@@ -6,10 +6,14 @@ function submitRegiser_OnClick()
 
     if(loginInput != null && passwordInput != null && emailInput.value != null) 
     {
-        if(DataProvider.register(loginInput.value, passwordInput.value, emailInput.value))
+        var dataProvider = new DataProvider(null, localStorage['baseUrl'])
+        dataProvider.register({UserId: 0, Login: loginInput.value, Password: passwordInput.value, Email: emailInput.value}).then(function(result)
         {
-            console.log("Registering successfull...")
-        }
+            if(result != null && result.UserId != 0)
+            {
+                alert("Register successfull!")
+            }
+        });
     }
     
 }
