@@ -1,0 +1,4 @@
+# NoteMenagerJSFrontend
+
+Potrzebne:
+- electron js
